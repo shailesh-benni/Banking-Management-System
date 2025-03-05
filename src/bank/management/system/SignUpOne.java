@@ -5,14 +5,16 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.util.*;
 
-public class SignUpOne extends JFrame {
+public class SignUpOne extends JFrame implements ActionListener {
+	long random;
     JTextField nameText, dobText, emailText, fnameText, addressText,pinText,cityText,stateText;
-    JRadioButton male, female;
-    JButton next, cancel;
+    
+    JRadioButton male, female, other, married, unmarried;
+    JButton next;
 
     SignUpOne() {
     	Random ran = new Random();
-    	long random = Math.abs((ran.nextLong()%900L)+1000L);
+    	random = Math.abs((ran.nextLong()%900L)+1000L);
     	
     	JLabel formno = new JLabel("APPLICATION FORM NO."+random );
     	formno.setFont(new Font("Raleway", Font.BOLD,38));
@@ -58,10 +60,10 @@ public class SignUpOne extends JFrame {
     	gender.setBounds(100,290,200,30);
     	add(gender);
     	
-    	JRadioButton male = new JRadioButton("Male");
+    	male = new JRadioButton("Male");
     	male.setBounds(300, 290, 60, 30);
     	add(male);
-    	JRadioButton female = new JRadioButton("Female");
+    	 female = new JRadioButton("Female");
     	female.setBounds(450, 290, 120, 30);
     	add(female);
     	
@@ -84,13 +86,13 @@ public class SignUpOne extends JFrame {
     	marital.setBounds(100,390,200,30);
     	add(marital);
     	
-    	JRadioButton married = new JRadioButton("Married");
+    	 married = new JRadioButton("Married");
     	married.setBounds(300, 390, 100, 30);
     	add(married);
-    	JRadioButton unmarried = new JRadioButton("Unmarried");
+    	 unmarried = new JRadioButton("Unmarried");
     	unmarried.setBounds(450, 390, 120, 30);
     	add(unmarried);
-    	JRadioButton other = new JRadioButton("Other");
+    	 other = new JRadioButton("Other");
     	other.setBounds(630, 390, 120, 30);
     	add(other);
     	
@@ -128,7 +130,7 @@ public class SignUpOne extends JFrame {
     	stateText.setBounds(300, 540, 400, 30);    	
     	add(stateText);
     	
-    	JLabel pincode = new JLabel("State: ");
+    	JLabel pincode = new JLabel("Pin Code: ");
     	pincode.setFont(new Font("Raleway", Font.BOLD,20));
     	pincode.setBounds(100,590,200,30);
     	add(pincode);
@@ -144,6 +146,7 @@ public class SignUpOne extends JFrame {
     	next.setForeground(Color.WHITE);
     	next.setFont(new Font("Raleway",Font.BOLD,14));
     	next.setBounds(620,660,80,30);
+    	next.addActionListener(this);
     	add(next);
     	
     	setTitle("NEW ACCOUNT");
@@ -153,8 +156,78 @@ public class SignUpOne extends JFrame {
         setLocation(350, 200);
         setVisible(true);
     }
-
-   
+    
+    public void actionPerformed(ActionEvent ae){
+    	String formno = ""+ random;//
+    	String name = nameText.getText();
+    	String fname = fnameText.getText();
+    	String dob = dobText.getText();
+    	String gender = null;
+    	if(male.isSelected()) {
+    		gender="Male";
+    	}
+    	else if(female.isSelected()) {
+    		gender="Female";
+    	}
+    	String email = emailText.getText();
+    	String marital =null;
+    	if(unmarried.isSelected()) {
+    		marital ="Unmarried";    	}
+    	else if (married.isSelected()) {
+    		marital="Married";
+    	}
+    	else if(other.isSelected()) {
+    		marital="Other";
+    	}
+    	
+    	String address = addressText.getText();
+    	String pin = pinText.getText();
+    	String city = cityText.getText();
+    	String state = stateText.getText();
+    	
+    	try {
+    		if(name.equals("")) {
+    			JOptionPane.showMessageDialog(null, "Name is Required");
+    		}
+    		else if (fname.equals("")) {
+    			JOptionPane.showMessageDialog(null,"Father Name is required");
+    		}
+    		else if(dob.equals("")) {
+    			JOptionPane.showMessageDialog(null, "Date of Birth is required");
+    		}
+    		else if(gender.equals("")) {
+    			JOptionPane.showMessageDialog(null, "Gender is Required");
+    		}
+    		else if(email.equals("")) {
+    			JOptionPane.showMessageDialog(null, "EmailId is Required");
+    		}
+    		else if(marital.equals("")) {
+    			JOptionPane.showMessageDialog(null, "Marital is Required");
+    		}
+    		else if(address.equals("")) {
+    			JOptionPane.showMessageDialog(null, "Address is Required");
+    		}
+    		else if(pin.equals("")) {
+    			JOptionPane.showMessageDialog(null, "Pincode is Required");
+    		}
+    		else if(city.equals("")) {
+    			JOptionPane.showMessageDialog(null, "Please Enter Your City");
+    		}
+    		else if(state.equals("")) {
+    			JOptionPane.showMessageDialog(null, "Please Enter Your State");
+    		}
+    		else {
+    			Conn c = new Conn();
+    			String query = "insert into signup values ('"+formno+"', '"+name+"','"+fname+"','"+dob+"','"+gender+"','"+email+"','"+marital+"','"+address+"','"+city+"','"+pin+"','"+state+"')";
+    			c.s.executeUpdate(query);
+    		}
+    	} catch(Exception e) {
+    		System.out.println(e);
+    	}
+    	
+    	
+    	
+    }
 
     public static void main(String[] args) {
         new SignUpOne();
